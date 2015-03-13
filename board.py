@@ -4,42 +4,51 @@ from pygame.locals import *
 #initialisation du module pygame
 pygame.init()
 #Création de la fenêtre
-fenetre = pygame.display.set_mode((1000, 700))
+window = pygame.display.set_mode((1000, 700))
 background_color = (31, 31, 31)
-fenetre.fill(background_color)
+window.fill(background_color)
 pygame.display.flip()
 #Chargement des images correspondants aux cases des rayons et des atomes
 square = pygame.image.load("img/square.jpg")
 ray_square = pygame.image.load("img/ray_square.jpg")
+atom_img = pygame.image.load("img/atom.png")
+
 
 class Atom(pygame.sprite.Sprite):
     def __init__(self, x, y):
-       pygame.sprite.Sprite.__init__(self)
+        pygame.sprite.Sprite.__init__(self)
+        self.image = atom_img.convert_alpha()
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
+        pygame.display.update()
 
-       self.image = pygame.image.load("img/atom.png")
-       self.rect = self.image.get_rect()
 
-
-def init_centers_array(size):
+def init_centers_list(size):
     #Initialise un tableau des centres qui contient les centres de toutes les cases du jeu
+    centers_list = list()
     for i in range(size):
-        #130,195 premier centre
-        pass
+        for j in range(size):
+            centers_list.append((110 + j*61, 115 + i*58))
+    return centers_list
+
+
+init_centers_list(6)
 
 
 def draw_lines(size):
     for i in range(size):
-        fenetre.blit(ray_square, (100 + i*61,50))
+        window.blit(ray_square, (100 + i*61,50))
 
     for i in range(size):
-        fenetre.blit(ray_square, (100 + i*61, 50 + 58*(size+1)))
+        window.blit(ray_square, (100 + i*61, 50 + 58*(size+1)))
 
     for j in range(size):
         for i in range(size + 2):
             if i == 0 or i == size + 1:
-                fenetre.blit(ray_square, (39 + i*61,108 + j*58))
+                window.blit(ray_square, (39 + i*61,108 + j*58))
             else:
-                fenetre.blit(square, (39 + i*61,108 + j*58))
+                window.blit(square, (39 + i*61,108 + j*58))
 
 
 def draw_interface(difficulty_level):
@@ -59,7 +68,7 @@ etatPartie = True
 click = 0
 a, b, c, d, e, f = 0, 0, 0, 0, 0, 0
 
-draw_interface("HARD")
+draw_interface("NORMAL")
 
 #MAIN 
 while True:
@@ -97,11 +106,11 @@ while True:
                     print("lol")
 
                     if click == 1:
-                        pygame.draw.circle(fenetre,BLACK, (a,b),12)
+                        pygame.draw.circle(window,BLACK, (a,b),12)
                     elif click == 2: 
-                        pygame.draw.circle(fenetre,BLACK, (c,d),12)
+                        pygame.draw.circle(window,BLACK, (c,d),12)
                     else:
-                        pygame.draw.circle(fenetre,BLACK, (e,f),12)
+                        pygame.draw.circle(window,BLACK, (e,f),12)
 
                     click -= 1
 
