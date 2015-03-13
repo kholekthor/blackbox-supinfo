@@ -1,4 +1,4 @@
 Camille : Splash Screen et Design
-Etienne/Reda : Dessin de l'interface, Placement des boules
+Etienne : Placement des boules, gestion laser
 Corentin : Ecrans Victoire / Défaite
 Reda : Dessin de l'interface, Placement des boules, Partie Réseau
