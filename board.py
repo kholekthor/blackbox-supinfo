@@ -1,33 +1,58 @@
 import pygame, sys
 from pygame.locals import *
-from random import *
+
 
 
 #initialisation du module pygame et mixer 
 pygame.init()
-pygame.mixer.init()
+
 
 #Création de la fenêtre
-fenetre = pygame.display.set_mode((800, 800))
-fond = pygame.image.load("bg.png")
-fenetre.blit(fond, (0,0))
+fenetre = pygame.display.set_mode((1000, 700))
+background_color = (31, 31, 31)
+fenetre.fill(background_color)
 pygame.display.flip()
 
-#déclaration des couleurs 
-GREEN = (0,255,0)
-BLUE = (0,0,255)
-YELLOW = (255,255,0)
-ORANGE = (255,127,0)
-PURPLE = (255,0,127)
-RED = (255,0,0)
-WHITE = (255,255,255)
-BLACK = (0,0,0)
-COULEUR = (205,201,201)
+
+square = pygame.image.load("img/square.jpg")
+
+def draw_interface(difficulty_level):
+    #Si le mode de diffidulté est facile
+    if difficulty_level == "EASY":
+        #On dessine les lignes de la grille
+        for i in range(4):
+            fenetre.blit(square, (200 + i*61,100))
+
+        for i in range(6):
+            fenetre.blit(square, (139 + i*61,158))
+
+        for i in range(6):
+            fenetre.blit(square, (139 + i*61,216))
+
+        for i in range(6):
+            fenetre.blit(square, (139 + i*61,274))
+
+        for i in range(6):
+            fenetre.blit(square, (139 + i*61,332))
+
+        for i in range(4):
+            fenetre.blit(square, (200 + i*61,390))
+
+    elif difficulty_level == "NORMAL":
+        pass
+    elif difficulty_level == "HARD":
+        pass
+
+
+#déclaration des couleurs
+
 
 #variables 
 etatPartie = True 
 click = 0
 a, b, c, d, e, f = 0, 0, 0, 0, 0, 0
+
+draw_interface("EASY")
 
 #MAIN 
 while True:
@@ -74,3 +99,5 @@ while True:
                     click -= 1
 
     pygame.display.update()
+
+
