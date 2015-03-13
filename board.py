@@ -16,32 +16,28 @@ pygame.display.flip()
 
 square = pygame.image.load("img/square.jpg")
 
+def draw_lines(number):
+    for i in range(number):
+        fenetre.blit(square, (100 + i*61,50))
+
+    for j in range(number):
+        for i in range(number + 2):
+            fenetre.blit(square, (39 + i*61,108 + j*58))
+
+    for i in range(number):
+        fenetre.blit(square, (100 + i*61, 50 + 58*(number+1)))
+
 def draw_interface(difficulty_level):
     #Si le mode de diffidulté est facile
     if difficulty_level == "EASY":
         #On dessine les lignes de la grille
-        for i in range(4):
-            fenetre.blit(square, (200 + i*61,100))
-
-        for i in range(6):
-            fenetre.blit(square, (139 + i*61,158))
-
-        for i in range(6):
-            fenetre.blit(square, (139 + i*61,216))
-
-        for i in range(6):
-            fenetre.blit(square, (139 + i*61,274))
-
-        for i in range(6):
-            fenetre.blit(square, (139 + i*61,332))
-
-        for i in range(4):
-            fenetre.blit(square, (200 + i*61,390))
+        draw_lines(4)
 
     elif difficulty_level == "NORMAL":
-        pass
+        draw_lines(6)
+
     elif difficulty_level == "HARD":
-        pass
+        draw_lines(8)
 
 
 #déclaration des couleurs
