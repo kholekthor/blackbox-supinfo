@@ -1,13 +1,13 @@
-import pygame, sys
+import pygame
 from pygame.locals import *
 from math import *
 
-#initialisation du module pygame
+#Initialisation du module pygame
 pygame.init()
+pygame.display.set_caption("Blackbox | Corentin Duflos && Reda El Ghomari && Camille Osinski && Etienne Mouraille")
 #Création de la fenêtre
 window = pygame.display.set_mode((1000, 700))
-background_color = (31, 31, 31)
-window.fill(background_color)
+window.fill((31, 31, 31))
 pygame.display.flip()
 #Chargement des images correspondants aux cases des rayons et des atomes
 square_img = pygame.image.load("img/square.jpg")
@@ -29,6 +29,10 @@ class Atom(pygame.sprite.Sprite):
     def get_position(self):
         return self.rect.x, self.rect.y
 
+
+#############################
+### Fonctions et Méthodes ###
+#############################
 
 def init_centres_list(size):
     #Initialise une liste de tous les centres des cases du jeu
@@ -52,7 +56,7 @@ def init_coords_list(size):
 
 def draw_lines(size):
     for i in range(size):
-        window.blit(ray_square_img, (100 + i*61,50))
+        window.blit(ray_square_img, (100 + i*61, 50))
 
     for i in range(size):
         window.blit(ray_square_img, (100 + i*61, 50 + 58*(size+1)))
@@ -60,9 +64,9 @@ def draw_lines(size):
     for j in range(size):
         for i in range(size + 2):
             if i == 0 or i == size + 1:
-                window.blit(ray_square_img, (39 + i*61,108 + j*58))
+                window.blit(ray_square_img, (39 + i*61, 108 + j*58))
             else:
-                window.blit(square_img, (39 + i*61,108 + j*58))
+                window.blit(square_img, (39 + i*61, 108 + j*58))
 
 
 def draw_interface(difficulty_level):
@@ -114,12 +118,7 @@ def remove_atom(atom):
     #On met une case vide à la place
     window.blit(square_img, (39 + square*61, 108 + line*58))
 
-
-
-#variables 
-etatPartie = True 
-click = 0
-
+#On dessine l'interface
 draw_interface("NORMAL")
 
 #MAIN 
@@ -130,31 +129,10 @@ while True:
             pygame.quit()
             sys.exit()
 
-        elif event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] in range(100, 467) and event.pos[1] in range(108, 457):
-            #Clic sur la grille pour placer un atome
-            place_atom(6, event.pos[0], event.pos[1])
-        
-        #Evenement clic gauche souris choix position sphère  
-        elif event.type == MOUSEBUTTONDOWN and event.button == 1 and click < 3 and etatPartie:#condition d'entrée
-                x = event.pos[0]
-                y = event.pos[1]
-
-                click += 1
-                
-                if click == 1:
-                    a = x
-                    b = y
-                elif click == 2:
-                    c = x
-                    d = y
-                else: 
-                    e = x
-                    f = y
-
-        #Evenement clic central souris boutons
-        elif event.type == MOUSEBUTTONDOWN and event.button == 2:
-                if event.pos[0] in range(0,800) and event.pos[1] in range(0,800):
-                        print(event.pos[0], event.pos[1])
+        elif event.type == MOUSEBUTTONDOWN and event.button == 1:
+            if event.pos[0] in range(100, 467) and event.pos[1] in range(108, 457):
+                #Clic sur la grille pour placer ou retirer un atome
+                place_atom(6, event.pos[0], event.pos[1])
 
     pygame.display.update()
 
