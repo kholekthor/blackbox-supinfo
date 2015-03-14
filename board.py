@@ -72,12 +72,12 @@ def draw_lines(size):
                 window.blit(square_img, (39 + i*61, 108 + j*58))
 
 
-def draw_interface(difficulty_level, nbDifficulte):
+def draw_interface(difficulty_level):
     #Si le mode de diffidulté est facile
     if difficulty_level == "EASY":
         #On dessine les lignes de la grille
         draw_lines(4)
-        nbDifficulte = 1
+        nbifficulte = 1
 
     elif difficulty_level == "NORMAL":
         draw_lines(6)
@@ -87,7 +87,6 @@ def draw_interface(difficulty_level, nbDifficulte):
         draw_lines(8)
         nbDifficulte = 3
 
-    return nbDifficulte 
 
 
 def place_atom(size, click_x, click_y, nbSphere):
@@ -146,7 +145,7 @@ def rand_atom(size):
 #variables 
 nbSphere = 0
 
-nbDifficulte = draw_interface("NORMAL", nbDifficulte)
+draw_interface("NORMAL")
 rand_atom(6)
 
 #MAIN 
@@ -162,7 +161,6 @@ while True:
                 #Clic sur la grille pour placer ou retirer un atome
                 nbSphere = place_atom(6, event.pos[0], event.pos[1], nbSphere)
 
-        
         #Evenement clic central souris boutons
         elif event.type == MOUSEBUTTONDOWN and event.button == 2:
                 if event.pos[0] in range(0, 800) and event.pos[1] in range(0,800):
