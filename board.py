@@ -10,9 +10,11 @@ background_color = (31, 31, 31)
 window.fill(background_color)
 pygame.display.flip()
 #Chargement des images correspondants aux cases des rayons et des atomes
-square = pygame.image.load("img/square.jpg")
-ray_square = pygame.image.load("img/ray_square.jpg")
+square_img = pygame.image.load("img/square.jpg")
+ray_square_img = pygame.image.load("img/ray_square.jpg")
 atom_img = pygame.image.load("img/atom.png")
+atoms = pygame.sprite.Group()
+atoms_coords = list()
 
 
 class Atom(pygame.sprite.Sprite):
@@ -23,6 +25,9 @@ class Atom(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         pygame.display.update()
+
+    def get_position(self):
+        return self.rect.x, self.rect.y
 
 
 def init_centres_list(size):
@@ -47,17 +52,17 @@ def init_coords_list(size):
 
 def draw_lines(size):
     for i in range(size):
-        window.blit(ray_square, (100 + i*61,50))
+        window.blit(ray_square_img, (100 + i*61,50))
 
     for i in range(size):
-        window.blit(ray_square, (100 + i*61, 50 + 58*(size+1)))
+        window.blit(ray_square_img, (100 + i*61, 50 + 58*(size+1)))
 
     for j in range(size):
         for i in range(size + 2):
             if i == 0 or i == size + 1:
-                window.blit(ray_square, (39 + i*61,108 + j*58))
+                window.blit(ray_square_img, (39 + i*61,108 + j*58))
             else:
-                window.blit(square, (39 + i*61,108 + j*58))
+                window.blit(square_img, (39 + i*61,108 + j*58))
 
 
 def draw_interface(difficulty_level):
@@ -73,22 +78,47 @@ def draw_interface(difficulty_level):
         draw_lines(8)
 
 
-def place_atom(click_x, click_y):
-    coords_list = init_coords_list(6)
-    centres_list = init_centres_list(6)
+def place_atom(size, click_x, click_y):
+    #Recupère la liste des centres et la liste des coordonnées possibles d'un atome
+    coords_list = init_coords_list(size)
+    centres_list = init_centres_list(size)
+
     distances_list = list()
+    #Calcule la distance euclidienne entre chaque centre et la position du clic
     for centre in centres_list:
         distances_list.append(sqrt((centre[0] - click_x)**2 + (centre[1] - click_y)**2))
+
+    #Détermine les coordonnées où placer l'atome grâce à la distance minimale
     atom_coord = coords_list[distances_list.index(min(distances_list))]
     atom = Atom(atom_coord[0], atom_coord[1])
-    atoms = pygame.sprite.Group()
-    atoms.add(atom)
-    atoms.draw(window)
+    #Vérifie si l'atome n'existe pas, si oui le supprimer
+    if atom_coord in atoms_coords:
+        remove_atom(atom)
+    else:
+        atoms.add(atom)
+        atoms.draw(window)
+        #Ajoute les coordonnées de l'atome à une liste
+        atoms_coords.append(atom_coord)
+
+
+def remove_atom(atom):
+    #Calcul de la ligne et de la case correspondant à l'atome en fonction de ses coordonnées
+    line = (atom.get_position()[1] - 115)/58
+    square = (atom.get_position()[0] - 110)/61+1
+    #On supprime l'atome du groupe d'atomes
+    for atom_loop in atoms.sprites():
+        if atom.get_position() == atom_loop.get_position():
+            atoms.remove(atom_loop)
+    #On supprime l'atome de la liste des coordonnées d'atome
+    atoms_coords.remove(atom.get_position())
+    #On met une case vide à la place
+    window.blit(square_img, (39 + square*61, 108 + line*58))
+
+
 
 #variables 
 etatPartie = True 
 click = 0
-a, b, c, d, e, f = 0, 0, 0, 0, 0, 0
 
 draw_interface("NORMAL")
 
@@ -102,7 +132,7 @@ while True:
 
         elif event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] in range(100, 467) and event.pos[1] in range(108, 457):
             #Clic sur la grille pour placer un atome
-            place_atom(event.pos[0], event.pos[1])
+            place_atom(6, event.pos[0], event.pos[1])
         
         #Evenement clic gauche souris choix position sphère  
         elif event.type == MOUSEBUTTONDOWN and event.button == 1 and click < 3 and etatPartie:#condition d'entrée
@@ -125,20 +155,6 @@ while True:
         elif event.type == MOUSEBUTTONDOWN and event.button == 2:
                 if event.pos[0] in range(0,800) and event.pos[1] in range(0,800):
                         print(event.pos[0], event.pos[1])
-
-        #Evenement clic droit souris boutons
-        elif event.type == MOUSEBUTTONDOWN and event.button == 3 and click > 0:
-                if event.pos[0] in range(526,663) and event.pos[1] in range(40,92):
-                    print("lol")
-
-                    if click == 1:
-                        pygame.draw.circle(window,BLACK, (a,b),12)
-                    elif click == 2: 
-                        pygame.draw.circle(window,BLACK, (c,d),12)
-                    else:
-                        pygame.draw.circle(window,BLACK, (e,f),12)
-
-                    click -= 1
 
     pygame.display.update()
 
