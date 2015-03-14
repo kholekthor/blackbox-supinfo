@@ -131,23 +131,24 @@ def remove_atom(atom):
     window.blit(square_img, (39 + square*61, 108 + line*58))
 
 
-def rand_atom(size):
+def rand_atom(size, nbDifficulte):
     #On initialise la liste des centres
     centres_list = init_centres_list(size)
-    #On prend au hasard l'un des centres de la liste précédente
-    rand_coord = centres_list[randint(0, len(centres_list))]
-    #Si l'atome n'est pas déjà placé, on le place, sinon on regénére.
-    if rand_coord not in atoms_coords:
-        place_atom(size, rand_coord[0], rand_coord[1], nbSphere)
-    else:
-        rand_atom(size)
+    for i in range(0, nbDifficulte):
+        #On prend au hasard l'un des centres de la liste précédente
+        rand_coord = centres_list[randint(0, len(centres_list))]
+        #Si l'atome n'est pas déjà placé, on le place, sinon on regénére.
+        if rand_coord not in atoms_coords:
+            place_atom(size, rand_coord[0], rand_coord[1], nbSphere)
+        else:
+            rand_atom(size, nbDifficulte)
 
 
 #variables 
 nbSphere = 0
 
 nbDifficulte = draw_interface("NORMAL", nbDifficulte)
-rand_atom(6)
+rand_atom(6, nbDifficulte)
 
 #MAIN 
 while True:
