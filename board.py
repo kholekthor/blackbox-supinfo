@@ -1,4 +1,4 @@
-import pygame
+import pygame, sys
 from pygame.locals import *
 from math import *
 
@@ -147,7 +147,6 @@ while True:
         elif event.type == MOUSEBUTTONDOWN and event.button == 1:
             if event.pos[0] in range(100, 467) and event.pos[1] in range(108, 457):
                 #Clic sur la grille pour placer ou retirer un atome
-                place_atom(6, event.pos[0], event.pos[1])
                 nbSphere = place_atom(6, event.pos[0], event.pos[1], nbSphere, nbDifficulte)
         
         #Evenement clic central souris boutons
