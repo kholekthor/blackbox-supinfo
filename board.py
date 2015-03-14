@@ -1,5 +1,6 @@
 import pygame, sys
 from pygame.locals import *
+from math import *
 
 #initialisation du module pygame
 pygame.init()
@@ -24,16 +25,24 @@ class Atom(pygame.sprite.Sprite):
         pygame.display.update()
 
 
-def init_centers_list(size):
-    #Initialise un tableau des centres qui contient les centres de toutes les cases du jeu
-    centers_list = list()
+def init_centres_list(size):
+    #Initialise une liste de tous les centres des cases du jeu
+    centres_list = list()
     for i in range(size):
         for j in range(size):
-            centers_list.append((110 + j*61, 115 + i*58))
-    return centers_list
+            #centre = position de l'atome
+            centres_list.append((130 + j*61, 137 + i*58))
+    return centres_list
 
 
-init_centers_list(6)
+def init_coords_list(size):
+    #Initialise une liste de toutes les positions possibles des atomes dans le jeu
+    coords_list = list()
+    for i in range(size):
+        for j in range(size):
+            #centre = position de l'atome
+            coords_list.append((110 + j*61, 115 + i*58))
+    return coords_list
 
 
 def draw_lines(size):
@@ -63,6 +72,19 @@ def draw_interface(difficulty_level):
     elif difficulty_level == "HARD":
         draw_lines(8)
 
+
+def place_atom(click_x, click_y):
+    coords_list = init_coords_list(6)
+    centres_list = init_centres_list(6)
+    distances_list = list()
+    for centre in centres_list:
+        distances_list.append(sqrt((centre[0] - click_x)**2 + (centre[1] - click_y)**2))
+    atom_coord = coords_list[distances_list.index(min(distances_list))]
+    atom = Atom(atom_coord[0], atom_coord[1])
+    atoms = pygame.sprite.Group()
+    atoms.add(atom)
+    atoms.draw(window)
+
 #variables 
 etatPartie = True 
 click = 0
@@ -77,6 +99,10 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             sys.exit()
+
+        elif event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] in range(100, 467) and event.pos[1] in range(108, 457):
+            #Clic sur la grille pour placer un atome
+            place_atom(event.pos[0], event.pos[1])
         
         #Evenement clic gauche souris choix position sphère  
         elif event.type == MOUSEBUTTONDOWN and event.button == 1 and click < 3 and etatPartie:#condition d'entrée
