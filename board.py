@@ -1,6 +1,8 @@
-import pygame
+import pygame, sys
 from pygame.locals import *
 from math import *
+from random import *
+
 
 #Initialisation du module pygame
 pygame.init()
@@ -15,6 +17,7 @@ ray_square_img = pygame.image.load("img/ray_square.jpg")
 atom_img = pygame.image.load("img/atom.png")
 atoms = pygame.sprite.Group()
 atoms_coords = list()
+nbDifficulte = 0
 
 
 class Atom(pygame.sprite.Sprite):
@@ -87,7 +90,7 @@ def draw_interface(difficulty_level, nbDifficulte):
     return nbDifficulte 
 
 
-def place_atom(size, click_x, click_y, nbSphere, nbDifficulte):
+def place_atom(size, click_x, click_y, nbSphere):
     #Recupère la liste des centres et la liste des coordonnées possibles d'un atome
     coords_list = init_coords_list(size)
     centres_list = init_centres_list(size)
@@ -110,10 +113,8 @@ def place_atom(size, click_x, click_y, nbSphere, nbDifficulte):
         #Ajoute les coordonnées de l'atome à une liste
         atoms_coords.append(atom_coord)
         nbSphere += 1
-    else:
-        pass
 
-    return nbSphere 
+    return nbSphere
 
 
 def remove_atom(atom):
@@ -130,11 +131,23 @@ def remove_atom(atom):
     window.blit(square_img, (39 + square*61, 108 + line*58))
 
 
+def rand_atom(size):
+    #On initialise la liste des centres
+    centres_list = init_centres_list(size)
+    #On prend au hasard l'un des centres de la liste précédente
+    rand_coord = centres_list[randint(0, len(centres_list))]
+    #Si l'atome n'est pas déjà placé, on le place, sinon on regénére.
+    if rand_coord not in atoms_coords:
+        place_atom(size, rand_coord[0], rand_coord[1], nbSphere)
+    else:
+        rand_atom(size)
+
+
 #variables 
 nbSphere = 0
-nbDifficulte = 0
 
 nbDifficulte = draw_interface("NORMAL", nbDifficulte)
+rand_atom(6)
 
 #MAIN 
 while True:
@@ -147,8 +160,7 @@ while True:
         elif event.type == MOUSEBUTTONDOWN and event.button == 1:
             if event.pos[0] in range(100, 467) and event.pos[1] in range(108, 457):
                 #Clic sur la grille pour placer ou retirer un atome
-                place_atom(6, event.pos[0], event.pos[1])
-                nbSphere = place_atom(6, event.pos[0], event.pos[1], nbSphere, nbDifficulte)
+                nbSphere = place_atom(6, event.pos[0], event.pos[1], nbSphere)
         
         #Evenement clic central souris boutons
         elif event.type == MOUSEBUTTONDOWN and event.button == 2:
