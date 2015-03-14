@@ -69,20 +69,25 @@ def draw_lines(size):
                 window.blit(square_img, (39 + i*61, 108 + j*58))
 
 
-def draw_interface(difficulty_level):
+def draw_interface(difficulty_level, nbDifficulte):
     #Si le mode de diffidulté est facile
     if difficulty_level == "EASY":
         #On dessine les lignes de la grille
         draw_lines(4)
+        nbDifficulte = 1
 
     elif difficulty_level == "NORMAL":
         draw_lines(6)
+        nbDifficulte = 2
 
     elif difficulty_level == "HARD":
         draw_lines(8)
+        nbDifficulte = 3
+
+    return nbDifficulte 
 
 
-def place_atom(size, click_x, click_y):
+def place_atom(size, click_x, click_y, nbSphere, nbDifficulte):
     #Recupère la liste des centres et la liste des coordonnées possibles d'un atome
     coords_list = init_coords_list(size)
     centres_list = init_centres_list(size)
@@ -98,11 +103,17 @@ def place_atom(size, click_x, click_y):
     #Vérifie si l'atome n'existe pas, si oui le supprimer
     if atom_coord in atoms_coords:
         remove_atom(atom)
-    else:
+        nbSphere -= 1
+    elif nbSphere < nbDifficulte:
         atoms.add(atom)
         atoms.draw(window)
         #Ajoute les coordonnées de l'atome à une liste
         atoms_coords.append(atom_coord)
+        nbSphere += 1
+    else:
+        pass
+
+    return nbSphere 
 
 
 def remove_atom(atom):
@@ -118,8 +129,18 @@ def remove_atom(atom):
     #On met une case vide à la place
     window.blit(square_img, (39 + square*61, 108 + line*58))
 
+<<<<<<< HEAD
 #On dessine l'interface
 draw_interface("NORMAL")
+=======
+
+
+#variables 
+nbSphere = 0
+nbDifficulte = 0
+
+nbDifficulte = draw_interface("NORMAL", nbDifficulte)
+>>>>>>> origin/master
 
 #MAIN 
 while True:
@@ -129,10 +150,21 @@ while True:
             pygame.quit()
             sys.exit()
 
+<<<<<<< HEAD
         elif event.type == MOUSEBUTTONDOWN and event.button == 1:
             if event.pos[0] in range(100, 467) and event.pos[1] in range(108, 457):
                 #Clic sur la grille pour placer ou retirer un atome
                 place_atom(6, event.pos[0], event.pos[1])
+=======
+        elif event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] in range(100, 467) and event.pos[1] in range(108, 457):
+            #Clic sur la grille pour placer un atome
+            nbSphere = place_atom(6, event.pos[0], event.pos[1], nbSphere, nbDifficulte)
+        
+        #Evenement clic central souris boutons
+        elif event.type == MOUSEBUTTONDOWN and event.button == 2:
+                if event.pos[0] in range(0,800) and event.pos[1] in range(0,800):
+                        print(event.pos[0], event.pos[1])
+>>>>>>> origin/master
 
     pygame.display.update()
 
