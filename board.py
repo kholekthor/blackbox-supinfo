@@ -133,20 +133,23 @@ def remove_atom(atom):
 def rand_atom(size):
     #On initialise la liste des centres
     centres_list = init_centres_list(size)
-    #On prend au hasard l'un des centres de la liste précédente
-    rand_coord = centres_list[randint(0, len(centres_list))]
-    #Si l'atome n'est pas déjà placé, on le place, sinon on regénére.
-    if rand_coord not in atoms_coords:
-        place_atom(size, rand_coord[0], rand_coord[1], nbSphere)
-    else:
-        rand_atom(size)
+    for i in range(0, nbDifficulte):
+        #On prend au hasard l'un des centres de la liste précédente
+        rand_coord = centres_list[randint(0, len(centres_list))]
+        #Si l'atome n'est pas déjà placé, on le place, sinon on regénére.
+        if rand_coord not in atoms_coords:
+            place_atom(size, rand_coord[0], rand_coord[1], nbSphere)
+        else:
+            rand_atom(size)
 
 
 #variables 
 nbSphere = 0
 
+
 draw_interface("NORMAL")
 rand_atom(6)
+
 
 #MAIN 
 while True:
