@@ -7,18 +7,23 @@ from random import *
 #Initialisation du module pygame
 pygame.init()
 pygame.display.set_caption("Blackbox | Corentin Duflos && Reda El Ghomari && Camille Osinski && Etienne Mouraille")
+
 #Création de la fenêtre
 window = pygame.display.set_mode((1000, 700))
 window.fill((31, 31, 31))
 pygame.display.flip()
+
 #Chargement des images correspondants aux cases des rayons et des atomes
 square_img = pygame.image.load("img/square.jpg")
 ray_square_img = pygame.image.load("img/ray_square.jpg")
 atom_img = pygame.image.load("img/atom.png")
 atoms = pygame.sprite.Group()
 atoms_coords = list()
-nbDifficulte = 0
 
+#variables 
+nbSphere = 0
+nbDifficulte = 2
+size = 6
 
 class Atom(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -77,17 +82,11 @@ def draw_interface(difficulty_level):
     if difficulty_level == "EASY":
         #On dessine les lignes de la grille
         draw_lines(4)
-        nbifficulte = 1
-
     elif difficulty_level == "NORMAL":
         draw_lines(6)
-        nbDifficulte = 2
-
     elif difficulty_level == "HARD":
         draw_lines(8)
-        nbDifficulte = 3
-
-
+        
 
 def place_atom(size, click_x, click_y, nbSphere):
     #Recupère la liste des centres et la liste des coordonnées possibles d'un atome
@@ -133,25 +132,25 @@ def remove_atom(atom):
 def rand_atom(size):
     #On initialise la liste des centres
     centres_list = init_centres_list(size)
+    #On prend au hasard l'un des centres de la liste précédente
+    rand_coord = centres_list[randint(0, len(centres_list))]
+    #Si l'atome n'est pas déjà placé, on le place, sinon on regénére.
+    if rand_coord not in atoms_coords:
+        place_atom(size, rand_coord[0], rand_coord[1], nbSphere)
+    else:
+        rand_atom(size)
+
+def rand_atoms():
     for i in range(0, nbDifficulte):
-        #On prend au hasard l'un des centres de la liste précédente
-        rand_coord = centres_list[randint(0, len(centres_list))]
-        #Si l'atome n'est pas déjà placé, on le place, sinon on regénére.
-        if rand_coord not in atoms_coords:
-            place_atom(size, rand_coord[0], rand_coord[1], nbSphere)
-        else:
-            rand_atom(size)
+        rand_atom(size)
 
 
-#variables 
-nbSphere = 0
 
+#MAIN
 
 draw_interface("NORMAL")
-rand_atom(6)
-
-
-#MAIN 
+rand_atoms()
+            
 while True:
     for event in pygame.event.get():
         #Evenement on quitte le jeu
