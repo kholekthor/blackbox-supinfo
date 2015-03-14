@@ -129,18 +129,12 @@ def remove_atom(atom):
     #On met une case vide à la place
     window.blit(square_img, (39 + square*61, 108 + line*58))
 
-<<<<<<< HEAD
-#On dessine l'interface
-draw_interface("NORMAL")
-=======
-
 
 #variables 
 nbSphere = 0
 nbDifficulte = 0
 
 nbDifficulte = draw_interface("NORMAL", nbDifficulte)
->>>>>>> origin/master
 
 #MAIN 
 while True:
@@ -150,21 +144,16 @@ while True:
             pygame.quit()
             sys.exit()
 
-<<<<<<< HEAD
         elif event.type == MOUSEBUTTONDOWN and event.button == 1:
             if event.pos[0] in range(100, 467) and event.pos[1] in range(108, 457):
                 #Clic sur la grille pour placer ou retirer un atome
                 place_atom(6, event.pos[0], event.pos[1])
-=======
-        elif event.type == MOUSEBUTTONDOWN and event.button == 1 and event.pos[0] in range(100, 467) and event.pos[1] in range(108, 457):
-            #Clic sur la grille pour placer un atome
-            nbSphere = place_atom(6, event.pos[0], event.pos[1], nbSphere, nbDifficulte)
+                nbSphere = place_atom(6, event.pos[0], event.pos[1], nbSphere, nbDifficulte)
         
         #Evenement clic central souris boutons
         elif event.type == MOUSEBUTTONDOWN and event.button == 2:
                 if event.pos[0] in range(0,800) and event.pos[1] in range(0,800):
                         print(event.pos[0], event.pos[1])
->>>>>>> origin/master
 
     pygame.display.update()
 
