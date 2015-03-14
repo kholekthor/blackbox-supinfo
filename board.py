@@ -161,10 +161,11 @@ while True:
             if event.pos[0] in range(100, 467) and event.pos[1] in range(108, 457):
                 #Clic sur la grille pour placer ou retirer un atome
                 nbSphere = place_atom(6, event.pos[0], event.pos[1], nbSphere)
+
         
         #Evenement clic central souris boutons
         elif event.type == MOUSEBUTTONDOWN and event.button == 2:
-                if event.pos[0] in range(0,800) and event.pos[1] in range(0,800):
+                if event.pos[0] in range(0, 800) and event.pos[1] in range(0,800):
                         print(event.pos[0], event.pos[1])
 
     pygame.display.update()
