@@ -85,7 +85,8 @@ def draw_interface(difficulty_level):
     elif difficulty_level == "NORMAL":
         draw_lines(6)
     elif difficulty_level == "HARD":
-        draw_lines(8)
+        draw_lines(8)  
+
         
 
 def place_atom(size, click_x, click_y, nbSphere):
