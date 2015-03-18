@@ -25,6 +25,7 @@ nbSphere = 0
 nbDifficulte = 2
 size = 6
 
+
 class Atom(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self)
@@ -42,24 +43,53 @@ class Atom(pygame.sprite.Sprite):
 ### Fonctions et Méthodes ###
 #############################
 
-def init_centres_list(size):
-    #Initialise une liste de tous les centres des cases du jeu
-    centres_list = list()
+def init_centers_grid(size):
+    #Initialise une liste de tous les centers des cases du jeu
+    centers_grid = list()
     for i in range(size):
         for j in range(size):
-            #centre = position de l'atome
-            centres_list.append((130 + j*61, 137 + i*58))
-    return centres_list
+            #center = position de l'atome
+            centers_grid.append((130 + j*61, 137 + i*58))
+    return centers_grid
 
 
-def init_coords_list(size):
+def init_coords_grid(size):
     #Initialise une liste de toutes les positions possibles des atomes dans le jeu
     coords_list = list()
     for i in range(size):
         for j in range(size):
-            #centre = position de l'atome
+            #center = position de l'atome
             coords_list.append((110 + j*61, 115 + i*58))
     return coords_list
+
+
+def init_centers_launchzone(size):
+    #Initialise une liste de tous les centers de la zone de lancement
+    centers_list = list()
+    for i in range(size):
+        #haut
+        centers_list.append((130 + i*61, 79))
+    for j in range(size):
+        #gauche
+        centers_list.append((69, 137 + j*58))
+    for k in range(size):
+        #bas
+        centers_list.append((130 + k*61, 486))
+    for l in range(size):
+        #droite
+        centers_list.append((495, 137+l*58))
+
+    return centers_list
+
+
+def nearest_center(centers_list, x, y):
+    distances_list = list()
+    #Calcule la distance euclidienne entre chaque center et la position du clic
+    for center in centers_list:
+        distances_list.append(sqrt((center[0] - x)**2 + (center[1] - y)**2))
+
+    #Détermine les coordonnées du centre le plus proche et retourne son indice
+    return distances_list.index(min(distances_list))
 
 
 def draw_lines(size):
@@ -87,20 +117,14 @@ def draw_interface(difficulty_level):
     elif difficulty_level == "HARD":
         draw_lines(8)  
 
-        
 
 def place_atom(size, click_x, click_y, nbSphere):
-    #Recupère la liste des centres et la liste des coordonnées possibles d'un atome
-    coords_list = init_coords_list(size)
-    centres_list = init_centres_list(size)
+    #Recupère la liste des centers et la liste des coordonnées possibles d'un atome
+    coords_list = init_coords_grid(size)
+    centers_grid = init_centers_grid(size)
 
-    distances_list = list()
-    #Calcule la distance euclidienne entre chaque centre et la position du clic
-    for centre in centres_list:
-        distances_list.append(sqrt((centre[0] - click_x)**2 + (centre[1] - click_y)**2))
-
-    #Détermine les coordonnées où placer l'atome grâce à la distance minimale
-    atom_coord = coords_list[distances_list.index(min(distances_list))]
+    #Détermine les coordonnées où placer l'atome
+    atom_coord = coords_list[nearest_center(centers_grid, click_x, click_y)]
     atom = Atom(atom_coord[0], atom_coord[1])
     #Vérifie si l'atome n'existe pas, si oui le supprimer
     if atom_coord in atoms_coords:
@@ -131,10 +155,10 @@ def remove_atom(atom):
 
 
 def rand_atom(size):
-    #On initialise la liste des centres
-    centres_list = init_centres_list(size)
-    #On prend au hasard l'un des centres de la liste précédente
-    rand_coord = centres_list[randint(0, len(centres_list))]
+    #On initialise la liste des centers
+    centers_grid = init_centers_grid(size)
+    #On prend au hasard l'un des centers de la liste précédente
+    rand_coord = centers_grid[randint(0, len(centers_grid))]
     #Si l'atome n'est pas déjà placé, on le place, sinon on regénére.
     if rand_coord not in atoms_coords:
         place_atom(size, rand_coord[0], rand_coord[1], nbSphere)
@@ -164,15 +188,26 @@ while True:
                 #Clic sur la grille pour placer ou retirer un atome
                 nbSphere = place_atom(6, event.pos[0], event.pos[1], nbSphere)
             elif (event.pos[0] in range(100, 467) and (event.pos[1] in range(50, 109) or event.pos[1] in range(457, 515))) or (event.pos[1] in range(110, 457) and (event.pos[0] in range(39, 101) or event.pos[0] in range(466, 528))):
-                print("Clic  sur la zone d'action !")
-
-
+                centers_list = init_centers_launchzone(6)
+                square = nearest_center(centers_list, event.pos[0], event.pos[1])
+                side = (trunc(square/24*4)) + 1
+                if side == 1:
+                    print("Tu as appuyé sur le côté du haut")
+                    print("Case : " + str(square % 6 + 1))
+                elif side == 2:
+                    print("Tu as appuyé sur le côté de gauche")
+                    print("Case : " + str(square % 6 + 1))
+                elif side == 3:
+                    print("Tu as appuyé sur le côté du bas")
+                    print("Case : " + str(square % 6 + 2))
+                else:
+                    print("Tu as appuyé sur le côté de droite")
+                    print("Case : " + str(square % 6 + 1))
 
         #Evenement clic central souris boutons
         elif event.type == MOUSEBUTTONDOWN and event.button == 2:
-                if event.pos[0] in range(0, 800) and event.pos[1] in range(0,800):
+                if event.pos[0] in range(0, 800) and event.pos[1] in range(0, 800):
                         print(event.pos[0], event.pos[1])
 
+
     pygame.display.update()
-
-
