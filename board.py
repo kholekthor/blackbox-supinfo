@@ -163,6 +163,10 @@ while True:
             if event.pos[0] in range(100, 467) and event.pos[1] in range(108, 457):
                 #Clic sur la grille pour placer ou retirer un atome
                 nbSphere = place_atom(6, event.pos[0], event.pos[1], nbSphere)
+            elif (event.pos[0] in range(100, 467) and (event.pos[1] in range(50, 109) or event.pos[1] in range(457, 515))) or (event.pos[1] in range(110, 457) and (event.pos[0] in range(39, 101) or event.pos[0] in range(466, 528))):
+                print("Clic  sur la zone d'action !")
+
+
 
         #Evenement clic central souris boutons
         elif event.type == MOUSEBUTTONDOWN and event.button == 2:
